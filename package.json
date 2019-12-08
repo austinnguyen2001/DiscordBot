@@ -1,0 +1,15 @@
+{
+    "scripts": {
+        "start": "babel-node ./bot.js",
+        "setup": "babel-node ./setup.js"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.7.5",
+        "@babel/core": "^7.7.5",
+        "@babel/node": "^7.7.4",
+        "@babel/preset-env": "^7.7.6"
+    },
+    "dependencies": {
+        "discord.js": "^11.5.1"
+    }
+}
