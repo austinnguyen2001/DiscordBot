@@ -16,7 +16,7 @@ for(let i = 0, len = commandFiles.length; i < len; i++) {
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}! \nIf you haven't yet added the bot, press the link below`);
-    console.log(`https://discordapp.com/oauth2/authorize?client_id=${client.user.toString().match(/\d/g).join("")}&scope=bot`);
+    console.log(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot`);
 });
 
 client.on('message', msg => {
@@ -28,15 +28,23 @@ client.on('message', msg => {
     }
     // just messing around. This is a basic reaction collector
     if (msg.content === 'getReactions') {
-        msg.react('👌');
 
         const filter = (reaction, user) => {
-            return reaction.emoji.name === '👌' && user.id !== client.user.toString().match(/\d/g).join("");
+            return reaction.emoji.name === '👌' && !user.bot;
         };
-        
-        msg.awaitReactions(filter, { time: 15000 })
-            .then(collected => console.log(`Collected ${collected.size} reactions`))
-            .catch(console.error);
+
+        // Msg them
+        msg.channel.send('React to this message to join the giveaway').then(sentMessage => {
+            sentMessage.react('👌');
+            sentMessage.awaitReactions(filter, { time: 10000 }) 
+                .then(collected => {
+                    const reaction = collected.first();
+                    console.log(reaction);
+                    for(let xd of reaction.users.keys()) {
+                        console.log(xd);
+                    }
+                }) 
+        });
     }
 });
   
