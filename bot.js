@@ -26,12 +26,12 @@ client.on('message', msg => {
     if (msg.content === 'ping') {
         msg.reply('pong');
     }
-    // just messing around
+    // just messing around. This is a basic reaction collector
     if (msg.content === 'getReactions') {
+        msg.react('👌');
+
         const filter = (reaction, user) => {
-            console.log(user.id);
-            console.log(msg.author.id);
-            return reaction.emoji.name === '👌' && user.id === msg.author.id;
+            return reaction.emoji.name === '👌' && user.id !== client.user.toString().match(/\d/g).join("");
         };
         
         msg.awaitReactions(filter, { time: 15000 })
