@@ -31,13 +31,11 @@ const startBot = () => {
     });
 }
 
-const questions = [
+let questionReponses = [];
+const questionIterator = [
     'What is your discord bot token?',
     'What is your twitch client id?'
-];
-
-const questionIterator = questions[Symbol.iterator]();
-let questionReponses = [];
+][Symbol.iterator]();
 
 // Init first question
 console.log(questionIterator.next().value);
@@ -49,6 +47,6 @@ rl.on('line', (input) => {
         console.log(nextQuestion.value);
     else {
         rl.close();
-        editConfig().then(() => startBot())
+        editConfig().then(() => startBot());
     }
 });
