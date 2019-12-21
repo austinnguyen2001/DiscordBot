@@ -9,7 +9,11 @@ import db from '../rethinkDB';
 module.exports = class DatabaseCommand extends Command {
 	constructor(client, info) {
         super(client, info);
-	}
+    }
+    
+    async getUser(discordId) {
+        return await db.table('users').get(discordId).run();
+    }
 
     async createEvent(event) {
         db.table('events').insert(event).run();

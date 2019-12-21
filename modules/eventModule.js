@@ -27,12 +27,18 @@ export default class EventModule {
   async tick() {
     const currTime = Date.now();
     for(let k = 0, length = this.events.length; k < length; k++) {
-      const selectedChannel = this.channels.filter(channel => channel.id === this.events[k].channelId);
-      const selectedMessage = await selectedChannel[0].fetchMessage(this.events[k].messageId);
-
-      const newEmbed = new RichEmbed(selectedMessage.embeds[0])
-        .setDescription(`React with 👌 to enter! \n Time remaining: ${this.getTimeLeft(this.events[k].endTime - currTime)}`);
-      selectedMessage.edit(newEmbed);
+      const timeLeft = this.events[k].endTime - currTime;
+      if(timeLeft > 0) {
+        const selectedChannel = this.channels.filter(channel => channel.id === this.events[k].channelId);
+        const selectedMessage = await selectedChannel[0].fetchMessage(this.events[k].messageId);
+        const newEmbed = new RichEmbed(selectedMessage.embeds[0])
+          .setDescription(`React with 👌 to enter! \n Time remaining: ${this.getTimeLeft(timeLeft)}`);
+        selectedMessage.edit(newEmbed);
+      } else {
+        this.events.splice(k, 1);
+        k--;
+        length--;
+      }
     }
   }
 

@@ -1,7 +1,8 @@
 # DiscordBot
 ## Current Features
 - Ability to start contest (counts down until end time)
-
+- Link discord and twitch accounts via oauth 
+(although I need to migrate it over to rethinkdb first *should be done)
 ## How to run 
 
 ### First start

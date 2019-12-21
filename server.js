@@ -7,6 +7,7 @@ import CryptoJS from 'crypto-js';
 import { CommandoClient } from 'discord.js-commando';
 import path from 'path';
 import eventModule from './modules/eventModule';
+import db from './rethinkDB.js';
 
 /*
 const xd = async () => {
@@ -74,11 +75,14 @@ passport.use(new twitchStrategy({
     scope: ["user_read", "channel:read:subscriptions"],
     passReqToCallback: true
   },
-  function(req, accessToken, refreshToken, profile, done) {
+  async (req, accessToken, refreshToken, profile, done) => {
     const reqStorage = Object.values(req.sessionStore.sessions)[0];
-    initializeUser(profile.id, reqStorage.substring(reqStorage.search(/discordId/i) + 12, reqStorage.lastIndexOf('"'))).then(user => {
-        return done(null, user);
-    })
+    const insertUser = {
+        discordId: reqStorage.substring(reqStorage.search(/discordId/i) + 12, reqStorage.lastIndexOf('"')),
+        twitchId: profile.id
+    };
+    const user = await db.table('users').insert(insertUser, { conflict: 'update', returnChanges: "always" }).run();
+    return done(null, user.changes[0].new_val);
   }
 ));
 
